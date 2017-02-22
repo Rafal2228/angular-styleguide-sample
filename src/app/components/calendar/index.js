@@ -9,6 +9,7 @@ const calendar = angular
   ])
   .component('calendar', CalendarComponent)
   .config(($stateProvider, $urlRouterProvider) => {
+    "ngInject";
     $stateProvider
       .state('calendar', {
         url: '/calendar',

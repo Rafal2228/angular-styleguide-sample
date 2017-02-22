@@ -14,6 +14,7 @@ const todo = angular
   .component('todo', TodoComponent)
   .service('TodoService', TodoService)
   .config(($stateProvider, $urlRouterProvider) => {
+    "ngInject";
     $stateProvider
       .state('todos', {
         url: '/todos',
