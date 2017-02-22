@@ -21,7 +21,7 @@ const todo = angular
         resolve: {
           todoData: TodoService => TodoService.getTodos()
         }
-      })
+      });
     $urlRouterProvider.otherwise('/');
   })
   .name;

@@ -16,7 +16,7 @@ const calendar = angular
       })
       .state('calendar.new', {
         component: 'calendarn'
-      });      
+      });
     $urlRouterProvider.otherwise('/');
   })
   .name;

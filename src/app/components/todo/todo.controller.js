@@ -10,7 +10,7 @@ class TodoController {
     this.todos = [];
     this.todoService.getTodos().then(response => {
       console.log(response);
-      this.todos = response
+      this.todos = response;
     });
   }
   $onChanges(changes) {
