@@ -25,6 +25,8 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: [{
+          loader: 'ng-annotate-loader'
+        },{
           loader: 'babel-loader',
           query: {
             presets: ['es2015']
@@ -58,7 +60,7 @@ module.exports = {
       }
     ]
   },
-  
+
   plugins: [
     new webpack.LoaderOptionsPlugin({
       options: {

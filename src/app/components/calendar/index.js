@@ -10,14 +10,15 @@ const calendar = angular
   .component('calendar', CalendarComponent)
   .config(($stateProvider, $urlRouterProvider) => {
     "ngInject";
+
     $stateProvider
-      .state('calendar', {
-        url: '/calendar',
-        component: 'calendar'
-      })
-      .state('calendar.new', {
-        component: 'calendarn'
-      });
+    .state('calendar', {
+      url: '/calendar',
+      component: 'calendar'
+    })
+    .state('calendar.new', {
+      component: 'calendarn'
+    });
     $urlRouterProvider.otherwise('/');
   })
   .name;
