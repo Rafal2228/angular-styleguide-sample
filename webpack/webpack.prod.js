@@ -4,16 +4,15 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const commonConfig = require('./webpack.common.js');
 const helpers = require('./helpers');
 
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const ENV = process.env.NODE_ENV = 'production';
 
 module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
 
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root(helpers.paths.dist),
     publicPath: '/',
-    filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].chunk.js'
+    filename: '[name].[hash].js'
   },
 
   plugins: [
@@ -31,7 +30,7 @@ module.exports = webpackMerge(commonConfig, {
     }),
     new webpack.LoaderOptionsPlugin({
       htmlLoader: {
-        minimize: false // workaround for ng2
+        minimize: true // workaround for ng2
       }
     })
   ]

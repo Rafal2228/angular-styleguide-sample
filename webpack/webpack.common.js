@@ -1,11 +1,12 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const helpers = require('./helpers');
 
 module.exports = {
   entry: {
-    'app': './src/index.ts'
+    'app': helpers.root(helpers.paths.src, 'index.ts')
   },
 
   resolve: {
@@ -17,7 +18,7 @@ module.exports = {
       {
         test: /\.(js|ts)$/,
         enforce: "pre",
-        exclude: /(node_modules|bower_components)/, // exclude any and all files in the node_modules folder
+        exclude: /(node_modules|bower_components)/,
         use: "tslint-loader"
       },
       {
@@ -43,7 +44,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        use: 'file-loader?name=assets/[name].[hash].[ext]'
+        use: `file-loader?name=${helpers.paths.assets}/[name].[hash].[ext]`
       },
       {
         test: /\.(scss|sass)$/,
@@ -54,7 +55,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: helpers.root('src', 'app'),
+        exclude: helpers.root(helpers.paths.src, 'app'),
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader?sourceMap'
@@ -62,7 +63,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: helpers.root('src', 'app'),
+        include: helpers.root(helpers.paths.src, 'app'),
         use: 'raw-loader'
       }
     ]
@@ -77,20 +78,18 @@ module.exports = {
         }
       }
     }),
-    // Workaround for angular/angular#11580
-    new webpack.ContextReplacementPlugin(
-      // The (\\|\/) piece accounts for path separators in *nix and Windows
-      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-      helpers.root('./src'), // location of your src
-      {} // a map of your routes
-    ),
 
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app']
+    new webpack.DllReferencePlugin({
+      manifest: require(helpers.root(helpers.paths.dist, 'vendor-manifest.json')),
+      context: '.'
     }),
 
     new HtmlWebpackPlugin({
-      template: helpers.root('src/index.html')
+      template: helpers.root(helpers.paths.src, 'index.html')
+    }),
+
+    new AddAssetHtmlPlugin({
+      filepath: require.resolve(helpers.root(helpers.paths.dist, 'vendor.js'))
     })
   ]
 };

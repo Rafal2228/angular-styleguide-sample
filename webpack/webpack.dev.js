@@ -8,10 +8,9 @@ module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
 
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root(helpers.paths.dist),
     publicPath: 'http://localhost:8080/',
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
+    filename: '[name].js'
   },
 
   plugins: [
