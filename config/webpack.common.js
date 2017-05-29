@@ -1,57 +1,64 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var helpers = require('./helpers');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const helpers = require('./helpers');
 
 module.exports = {
   entry: {
-    'vendor': './src/vendor.js',
-    'app': './src/index.js'
+    'app': './src/index.ts'
   },
 
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js', '.ts']
   },
 
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         enforce: "pre",
-        exclude: /node_modules/, // exclude any and all files in the node_modules folder
-        use: "jshint-loader"
+        exclude: /(node_modules|bower_components)/, // exclude any and all files in the node_modules folder
+        use: "tslint-loader"
       },
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         exclude: /(node_modules|bower_components)/,
-        use: [{
-          loader: 'ng-annotate-loader'
-        },{
-          loader: 'babel-loader',
-          query: {
-            presets: ['es2015']
+        use: [
+          {
+            loader: 'ng-annotate-loader'
+          },
+          {
+            loader: 'ts-loader'
           }
-        }]
+        ]
       },
       {
         test: /\.html$/,
-        use: 'html-loader'
+        loader: 'html-loader',
+        query: {
+          exportAsEs6Default: true,
+          root: helpers.root('src'),
+          attrs: ['img:src', 'link:href']
+        }
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
         use: 'file-loader?name=assets/[name].[hash].[ext]'
       },
       {
-        test: /\.styl$/,
+        test: /\.(scss|sass)$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader!stylus-loader?paths=node_modules/bootstrap-styl&resolve url',
+          use: 'css-loader!sass-loader',
         }),
       },
       {
         test: /\.css$/,
         exclude: helpers.root('src', 'app'),
-        use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader?sourceMap' })
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader?sourceMap'
+        })
       },
       {
         test: /\.css$/,
@@ -64,19 +71,9 @@ module.exports = {
   plugins: [
     new webpack.LoaderOptionsPlugin({
       options: {
-        jshint: {
-          // any jshint option http://www.jshint.com/docs/options/
-          // i. e.
-          camelcase: true,
-
-          // jshint errors are displayed by default as warnings
-          // set emitErrors to true to display them as errors
-          emitErrors: true,
-
-          // jshint to not interrupt the compilation
-          // if you want any file with jshint errors to fail
-          // set failOnHint to true
-          failOnHint: true,
+        tslint: {
+          configFile: helpers.root('tslint.json'),
+          tsConfigFile: helpers.root('tsconfig.json')
         }
       }
     }),
@@ -89,11 +86,11 @@ module.exports = {
     ),
 
     new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor']
+      name: ['app']
     }),
 
     new HtmlWebpackPlugin({
-      template: 'src/index.html'
+      template: helpers.root('src/index.html')
     })
   ]
 };
