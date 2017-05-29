@@ -4,7 +4,7 @@ const package = require(helpers.root('package.json'));
 
 const plugins = [
   new webpack.DllPlugin({
-    path: helpers.root('dist/vendor-manifest.json'),
+    path: helpers.root(helpers.paths.dist, 'vendor-manifest.json'),
     name: '[name]_lib'
   })
 ];
@@ -27,7 +27,7 @@ module.exports = {
 
   output: {
     filename: '[name].js',
-    path: helpers.root('dist'),
+    path: helpers.root(helpers.paths.dist),
     library: '[name]_lib'
   },
 

@@ -1,0 +1,7 @@
+:root {
+  --ufc-italic: italic;
+}
+
+.app {
+  font-style: var(--ufc-italic);
+}

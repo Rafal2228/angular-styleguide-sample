@@ -47,24 +47,19 @@ module.exports = {
         use: `file-loader?name=${helpers.paths.assets}/[name].[hash].[ext]`
       },
       {
-        test: /\.(scss|sass)$/,
+        test: /\.(css)$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader!sass-loader',
-        }),
-      },
-      {
-        test: /\.css$/,
-        exclude: helpers.root(helpers.paths.src, 'app'),
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader?sourceMap'
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: false,
+                importLoaders: 1
+              }
+            },
+            'postcss-loader'
+          ]
         })
-      },
-      {
-        test: /\.css$/,
-        include: helpers.root(helpers.paths.src, 'app'),
-        use: 'raw-loader'
       }
     ]
   },
